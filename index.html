@@ -16,7 +16,6 @@
 
     <div class="w-full max-w-md">
         <div class="relative w-full aspect-[3/4] mb-6 rounded-2xl border-2 border-red-700 shadow-[0_0_30px_#ff000040] overflow-hidden bg-black/50">
-            
             <div id="photo-container" class="h-full w-full"></div>
 
             <button onclick="prevSlide()" class="absolute left-2 top-1/2 -translate-y-1/2 text-white/40 hover:text-white text-4xl p-2 z-10">❮</button>
@@ -42,17 +41,20 @@
         </div>
     </div>
 
+    <audio id="mySong" src="public/song.mp3" loop></audio>
+
     <script>
         const totalPhotos = 15;
         const container = document.getElementById('photo-container');
         const counter = document.getElementById('counter');
+        const song = document.getElementById('mySong');
         let current = 0;
 
-        // Generate 15 slide secara otomatis
+        // Otomatis panggil foto1.jpg sampai foto15.jpg
         for (let i = 1; i <= totalPhotos; i++) {
             const div = document.createElement('div');
             div.className = `slide h-full w-full ${i === 1 ? 'active' : ''}`;
-            div.innerHTML = `<img src="public/foto${i}.jpg" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300x400?text=Foto+${i}+Belum+Ada'">`;
+            div.innerHTML = `<img src="public/foto${i}.jpg" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300x400?text=Foto+${i}'">`;
             container.appendChild(div);
         }
 
@@ -69,6 +71,9 @@
         function prevSlide() { updateSlide(current - 1); }
 
         function showLetter() {
+            // Musik diputar saat tombol diklik (Aturan Browser HP)
+            song.play().catch(e => console.log("Musik butuh izin klik"));
+            
             document.getElementById('letter').classList.remove('hidden');
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             document.getElementById('showLetterBtn').style.display = 'none';
@@ -76,4 +81,3 @@
     </script>
 </body>
 </html>
-
