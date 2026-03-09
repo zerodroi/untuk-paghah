@@ -3,80 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For My Red Rose - Farah</title>
+    <title>For Farah</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: radial-gradient(circle, #2a0000 0%, #000 100%); color: #fff; font-family: 'Georgia', serif; overflow-x: hidden; }
-        .slide { display: none; }
-        .active { display: block; animation: fadeIn 1.2s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+        body { background-color: #0f0f0f; color: #d1d1d1; font-family: 'Special Elite', cursor; overflow: hidden; }
+        .page { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .active { display: flex; }
+        .typewriter { border-right: 2px solid white; white-space: pre-wrap; overflow: hidden; animation: blink 0.7s infinite; }
+        @keyframes blink { 50% { border-color: transparent; } }
+        img { max-width: 80%; max-height: 50vh; border-radius: 8px; filter: grayscale(50%) contrast(1.1); margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-4 text-center">
-
-    <div class="w-full max-w-md">
-        <div class="relative w-full aspect-[3/4] mb-6 rounded-2xl border-2 border-red-700 shadow-[0_0_30px_#ff000040] overflow-hidden bg-black/50">
-            <div id="photo-container" class="h-full w-full"></div>
-
-            <button onclick="prevSlide()" class="absolute left-2 top-1/2 -translate-y-1/2 text-white/40 hover:text-white text-4xl p-2 z-10">❮</button>
-            <button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 text-white/40 hover:text-white text-4xl p-2 z-10">❯</button>
-            
-            <div id="counter" class="absolute top-4 right-4 bg-black/60 px-3 py-1 rounded-full text-xs text-red-500 border border-red-900">
-                1 / 15
-            </div>
-        </div>
-
-        <button id="showLetterBtn" onclick="showLetter()" class="mb-10 px-8 py-3 bg-red-700 hover:bg-red-600 rounded-full text-white font-bold shadow-[0_0_15px_red] transition-all active:scale-95">
-            Buka Pesan Mewah 💌
-        </button>
-
-        <div id="letter" class="hidden p-8 bg-red-950/30 border-2 border-red-900 rounded-3xl shadow-[0_0_50px_rgba(255,0,0,0.3)] mb-10">
-            <h1 class="text-3xl font-bold text-red-500 mb-6">Untuk Farah...</h1>
-            <p class="text-lg leading-relaxed text-gray-200 italic">
-                "Makasih ya sudah jadi bagian paling indah di hari-hariku. <br>
-                15 foto ini nggak cukup buat gambarin betapa berartinya kamu. <br>
-                Semoga kamu suka kejutan kecil ini."
-            </p>
-            <p class="mt-8 text-xl text-red-600 font-bold">- Mawar Merahmu -</p>
-        </div>
-    </div>
+<body>
 
     <audio id="mySong" src="public/song.mp3" loop></audio>
 
+    <div class="page active" onclick="nextSlide(1)">
+        <img src="public/foto1.jpg" alt="Farah">
+        <div id="text1" class="text-lg"></div>
+        <p class="mt-10 text-xs opacity-30 text-white">Tap to continue...</p>
+    </div>
+
+    <div class="page" onclick="nextSlide(2)">
+        <img src="public/foto2.jpg">
+        <div id="text2" class="text-lg"></div>
+    </div>
+
+    <div class="page" onclick="nextSlide(3)">
+        <div class="bg-white text-black p-8 rounded shadow-2xl max-w-sm rotate-1 relative">
+            <div id="finalText" class="text-sm leading-loose"></div>
+            <div class="absolute bottom-4 right-6 text-xs opacity-50">- Mawar Merahmu</div>
+        </div>
+    </div>
+
     <script>
-        const totalPhotos = 15;
-        const container = document.getElementById('photo-container');
-        const counter = document.getElementById('counter');
+        const messages = [
+            "i hope you read this, even if it's too late.",
+            "I still think about you sometimes...",
+            "We both tried. We both cared. But I just wonder... if we had met at a different point in life, would the ending have been different?\n\nAnyway, I hope you're doing okay."
+        ];
+
+        let currentSlide = 0;
+        const pages = document.querySelectorAll('.page');
         const song = document.getElementById('mySong');
-        let current = 0;
 
-        // Otomatis panggil foto1.jpg sampai foto15.jpg
-        for (let i = 1; i <= totalPhotos; i++) {
-            const div = document.createElement('div');
-            div.className = `slide h-full w-full ${i === 1 ? 'active' : ''}`;
-            div.innerHTML = `<img src="public/foto${i}.jpg" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300x400?text=Foto+${i}'">`;
-            container.appendChild(div);
+        function typeWriter(text, elementId, speed = 50) {
+            let i = 0;
+            const element = document.getElementById(elementId);
+            element.innerHTML = "";
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
         }
 
-        const slides = document.querySelectorAll('.slide');
+        // Mulai ketikan pertama
+        window.onload = () => {
+            typeWriter(messages[0], 'text1');
+        };
 
-        function updateSlide(index) {
-            slides[current].classList.remove('active');
-            current = (index + totalPhotos) % totalPhotos;
-            slides[current].classList.add('active');
-            counter.innerText = `${current + 1} / ${totalPhotos}`;
-        }
+        function nextSlide(index) {
+            // Putar musik saat pertama kali layar disentuh
+            song.play().catch(() => {});
 
-        function nextSlide() { updateSlide(current + 1); }
-        function prevSlide() { updateSlide(current - 1); }
+            if (index < pages.length) {
+                pages[currentSlide].classList.remove('active');
+                pages[index].classList.add('active');
+                currentSlide = index;
 
-        function showLetter() {
-            // Musik diputar saat tombol diklik (Aturan Browser HP)
-            song.play().catch(e => console.log("Musik butuh izin klik"));
-            
-            document.getElementById('letter').classList.remove('hidden');
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-            document.getElementById('showLetterBtn').style.display = 'none';
+                if (index === 1) typeWriter(messages[1], 'text2');
+                if (index === 2) typeWriter(messages[2], 'finalText', 40);
+            }
         }
     </script>
 </body>
