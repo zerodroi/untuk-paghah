@@ -3,81 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For Farah</title>
+    <title>For My Red Rose - Farah</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
-        body { background-color: #0f0f0f; color: #d1d1d1; font-family: 'Special Elite', cursor; overflow: hidden; }
-        .page { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .active { display: flex; }
-        .typewriter { border-right: 2px solid white; white-space: pre-wrap; overflow: hidden; animation: blink 0.7s infinite; }
+        body { background-color: #0b0b0b; color: #eaeaea; font-family: 'Special Elite', serif; overflow: hidden; margin: 0; }
+        .page { display: none; min-height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; cursor: pointer; }
+        .active { display: flex; animation: fadeIn 1s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        img { max-width: 85%; max-height: 50vh; border-radius: 4px; filter: contrast(1.1) brightness(0.9); margin-bottom: 25px; box-shadow: 0 15px 50px rgba(0,0,0,0.8); border: 1px solid #333; }
+        .text-container { min-height: 80px; max-width: 320px; line-height: 1.6; font-size: 14px; }
+        .cursor { border-right: 2px solid #991b1b; animation: blink 0.8s infinite; }
         @keyframes blink { 50% { border-color: transparent; } }
-        img { max-width: 80%; max-height: 50vh; border-radius: 8px; filter: grayscale(50%) contrast(1.1); margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .final-letter { background: #fdfdfd; color: #1a1a1a; padding: 35px 25px; border-radius: 2px; box-shadow: 15px 15px 40px rgba(0,0,0,0.5); transform: rotate(-1deg); max-width: 330px; text-align: left; font-size: 13px; line-height: 1.7; position: relative; }
+        #start-screen { display: flex; height: 100vh; justify-content: center; align-items: center; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <audio id="mySong" src="public/song.mp3" loop></audio>
 
-    <div class="page active" onclick="nextSlide(1)">
-        <img src="public/foto1.jpg" alt="Farah">
-        <div id="text1" class="text-lg"></div>
-        <p class="mt-10 text-xs opacity-30 text-white">Tap to continue...</p>
+    <div id="start-screen" onclick="startExperience()">
+        <p class="text-xl italic opacity-50 animate-pulse">love should be fun</p>
     </div>
 
-    <div class="page" onclick="nextSlide(2)">
-        <img src="public/foto2.jpg">
-        <div id="text2" class="text-lg"></div>
-    </div>
-
-    <div class="page" onclick="nextSlide(3)">
-        <div class="bg-white text-black p-8 rounded shadow-2xl max-w-sm rotate-1 relative">
-            <div id="finalText" class="text-sm leading-loose"></div>
-            <div class="absolute bottom-4 right-6 text-xs opacity-50">- Mawar Merahmu</div>
-        </div>
-    </div>
+    <div id="main-container" style="display: none;"></div>
 
     <script>
         const messages = [
-            "i hope you read this, even if it's too late.",
-            "I still think about you sometimes...",
-            "We both tried. We both cared. But I just wonder... if we had met at a different point in life, would the ending have been different?\n\nAnyway, I hope you're doing okay."
+            "Meeting you is honestly one of the luckiest things that ever happened to me, because someone as beautiful as you isn’t easy to find",
+            "sometimes i still can’t believe life actually let me meet someone like you, beautiful in a way that makes everything else feel less impressive",
+            "there are so many people in this world, but somehow i ended up meeting the most beautiful one, feels like i got really lucky",
+            "if someone asked me what real beauty looks like, i’d probably just think about you and smile",
+            "crossing paths with you feels like one of those rare lucky moments in life that people don’t usually get twice",
+            "every time i think about how we met, it just makes me realize how lucky i actually am",
+            "people always talk about beautiful things in the world, but somehow none of them ever remind me of anyone except you",
+            "sometimes i just sit there smiling because i remember that out of everyone in this world, i met you",
+            "the funny thing about life is that it randomly brought someone as beautiful as you into my world",
+            "if luck was a real person, it probably looked like the moment i met you",
+            "honestly, knowing someone like you already feels like winning something rare",
+            "the world is big, but somehow it still led me straight to someone as beautiful as you",
+            "sometimes beauty is hard to define, but thinking about you makes it pretty simple",
+            "life really surprised me the day it decided i should meet someone like you",
+            "and yeah… my skills are pretty cool too, right 😏"
         ];
 
-        let currentSlide = 0;
-        const pages = document.querySelectorAll('.page');
-        const song = document.getElementById('mySong');
+        const letterPart1 = `i just want you to know something, and i mean it with all my heart, you’re really, really beautiful, not just in the normal way people say it, but in a way that actually makes someone stop and smile when they think about you\n\nsometimes when i look at things like sunsets, people always say sunsets are the definition of beauty, the sky turning orange and pink, everything looking calm and perfect for a moment, but honestly, even sunsets can’t really compare to you...`;
+        
+        const letterPart2 = `because a sunset only lasts for a little while, but the beauty you have stays in my mind way longer than that\n\nand it’s not just about how you look, it’s also the way you exist in my life, the way you make simple moments feel special. that’s why i say you’re my red rose, because to me you’re something rare and precious.\n\nso yeah, maybe people will keep saying sunsets are beautiful, but for me it’s different, because the most beautiful thing i know isn’t in the sky at the end of the day, it’s you, the girl i love, my red rose.`;
 
-        function typeWriter(text, elementId, speed = 50) {
-            let i = 0;
-            const element = document.getElementById(elementId);
-            element.innerHTML = "";
+        const container = document.getElementById('main-container');
+        const song = document.getElementById('mySong');
+        let currentSlide = 0;
+
+        function startExperience() {
+            document.getElementById('start-screen').style.display = 'none';
+            container.style.display = 'block';
+            song.play(); // Lagu mulai di sini
+            setupSlides();
+            typeWriter(messages[0], 'type-1');
+        }
+
+        function setupSlides() {
+            for (let i = 1; i <= 15; i++) {
+                const page = document.createElement('div');
+                page.className = `page ${i === 1 ? 'active' : ''}`;
+                page.onclick = () => nextSlide();
+                page.innerHTML = `
+                    <img src="public/foto${i}.jpg" onerror="this.src='https://via.placeholder.com/400x600?text=Foto+${i}'">
+                    <div class="text-container"><span id="type-${i}"></span><span class="cursor"></span></div>
+                    <p class="mt-8 text-[10px] opacity-20">Tap to continue</p>
+                `;
+                container.appendChild(page);
+            }
+
+            const p1 = document.createElement('div');
+            p1.className = 'page'; p1.onclick = () => nextSlide();
+            p1.innerHTML = `<div class="final-letter"><div id="type-f1"></div><p class="mt-4 text-[10px] text-right opacity-30">Next ⮕</p></div>`;
+            container.appendChild(p1);
+
+            const p2 = document.createElement('div');
+            p2.className = 'page'; p2.onclick = () => nextSlide();
+            p2.innerHTML = `<div class="final-letter"><div id="type-f2"></div><div class="mt-8 text-red-700 font-bold text-right">- Your Red Rose -</div></div>`;
+            container.appendChild(p2);
+        }
+
+        function typeWriter(text, elementId, speed = 45) {
+            let i = 0; const el = document.getElementById(elementId);
+            el.innerHTML = "";
             function type() {
-                if (i < text.length) {
-                    element.innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(type, speed);
-                }
+                if (i < text.length) { el.innerHTML += text.charAt(i); i++; setTimeout(type, speed); }
             }
             type();
         }
 
-        // Mulai ketikan pertama
-        window.onload = () => {
-            typeWriter(messages[0], 'text1');
-        };
-
-        function nextSlide(index) {
-            // Putar musik saat pertama kali layar disentuh
-            song.play().catch(() => {});
-
-            if (index < pages.length) {
+        function nextSlide() {
+            const pages = document.querySelectorAll('.page');
+            if (currentSlide < pages.length - 1) {
                 pages[currentSlide].classList.remove('active');
-                pages[index].classList.add('active');
-                currentSlide = index;
+                currentSlide++;
+                pages[currentSlide].classList.add('active');
 
-                if (index === 1) typeWriter(messages[1], 'text2');
-                if (index === 2) typeWriter(messages[2], 'finalText', 40);
+                if (currentSlide < 15) {
+                    typeWriter(messages[currentSlide], `type-${currentSlide + 1}`);
+                } else if (currentSlide === 15) {
+                    typeWriter(letterPart1, 'type-f1', 40);
+                } else if (currentSlide === 16) {
+                    typeWriter(letterPart2, 'type-f2', 40);
+                }
             }
         }
     </script>
